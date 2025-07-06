@@ -3,12 +3,12 @@ import matplotlib.pyplot as plt
 import cv2
 from pathlib import Path
 
-def process_image(image_path, target_size=(128, 128)):
+def process_image(image_path, target_size=(64, 64)):
     """
     Procesa una imagen:
     1. Lee la imagen
     2. Convierte a escala de grises
-    3. Escala a 128x128
+    3. Escala a 64x64
     4. Normaliza los valores a [0, 1]
     
     Args:
@@ -16,7 +16,7 @@ def process_image(image_path, target_size=(128, 128)):
         target_size: Tamaño objetivo (ancho, alto)
     
     Returns:
-        Imagen procesada como array numpy de forma (128, 128, 1)
+        Imagen procesada como array numpy de forma (64, 64, 1)
     """
     # Leer imagen
     img = cv2.imread(str(image_path))
@@ -31,13 +31,13 @@ def process_image(image_path, target_size=(128, 128)):
     # Convertir a escala de grises
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2GRAY)
     
-    # Escalar a 128x128
+    # Escalar a 64x64
     img_resized = cv2.resize(img_gray, target_size, interpolation=cv2.INTER_AREA)
     
     # Normalizar a [0, 1]
     img_normalized = img_resized.astype(np.float32) / 255.0
     
-    # Agregar dimensión de canal para que sea (128, 128, 1)
+    # Agregar dimensión de canal para que sea (64, 64, 1)
     img_final = np.expand_dims(img_normalized, axis=-1)
     
     return img_final
