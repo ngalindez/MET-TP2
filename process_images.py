@@ -35,10 +35,10 @@ def process_image(image_path, target_size=(64, 64)):
     img_resized = cv2.resize(img_gray, target_size, interpolation=cv2.INTER_AREA)
     
     # Normalizar a [0, 1]
-    img_normalized = img_resized.astype(np.float32) / 255.0
+    #img_normalized = img_resized.astype(np.float32) / 255.0
     
     # Agregar dimensión de canal para que sea (64, 64, 1)
-    img_final = np.expand_dims(img_normalized, axis=-1)
+    img_final = np.expand_dims(img_resized, axis=-1)
     
     return img_final
 
