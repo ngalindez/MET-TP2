@@ -69,7 +69,7 @@ def gradient_descent(X_train, y_train, X_test, y_test, alpha, num_it, w=None, b=
 
 def gradient_ascent(X_train, y_train, X_test, y_test, alpha, num_it, w=None, b=None):
     # Inicializamos los parámetros
-    w = np.random.randn(X_train.shape[1]) * 0.0001
+    w = np.zeros(X_train.shape[1])
     b = 0.0
 
     # Para visualizar convergencia
@@ -103,7 +103,7 @@ def gradient_ascent(X_train, y_train, X_test, y_test, alpha, num_it, w=None, b=N
     return w, b, metrics
 
 
-def plot_metrics(metrics_dict):
+def plot_metrics(metrics_dict, save_path=None):
     # Ver que métricas estan en el dict
     has_mse = 'train_mse_list' in metrics_dict and 'test_mse_list' in metrics_dict
     has_acc = 'train_acc_list' in metrics_dict and 'test_acc_list' in metrics_dict
@@ -150,6 +150,8 @@ def plot_metrics(metrics_dict):
         plot_idx += 1
 
     plt.tight_layout()
+    if save_path is not None:
+        plt.savefig(save_path, dpi=300)
     plt.show()
 
 def metricas(X, y, w, b):
