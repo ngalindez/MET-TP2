@@ -9,7 +9,6 @@ def process_image(image_path, target_size=(64, 64)):
     1. Lee la imagen
     2. Convierte a escala de grises
     3. Escala a 64x64
-    4. Normaliza los valores a [0, 1]
     
     Args:
         image_path: Ruta a la imagen
@@ -34,8 +33,6 @@ def process_image(image_path, target_size=(64, 64)):
     # Escalar a 64x64
     img_resized = cv2.resize(img_gray, target_size, interpolation=cv2.INTER_AREA)
     
-    # Normalizar a [0, 1]
-    #img_normalized = img_resized.astype(np.float32) / 255.0
     
     # Agregar dimensión de canal para que sea (64, 64, 1)
     img_final = np.expand_dims(img_resized, axis=-1)
@@ -81,9 +78,6 @@ def load_and_process_dataset(dataset_path="DatasetTP"):
     return np.array(images), np.array(labels)
 
 def visualize_samples(images, labels, num_samples=8):
-    """
-    Visualiza algunas muestras del dataset procesado.
-    """
     fig, axes = plt.subplots(2, 4, figsize=(12, 6))
     axes = axes.ravel()
     

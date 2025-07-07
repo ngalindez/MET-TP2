@@ -7,6 +7,10 @@ def predict(X, w, b):
     z = X @ w + b
     return (np.tanh(z) + 1)/2
 
+def predict_logverosimilitud(X, w, b):
+    z = X @ w + b
+    return 1 / (1 + np.exp(-z))
+
 
 def gradiente(X, y, w, b):
     z = X @ w + b
@@ -30,7 +34,7 @@ def gradiente_logverosimilitud(X, y, w, b):
 
 def gradient_descent(X_train, y_train, X_test, y_test, alpha, num_it, w=None, b=None):
     # Inicializamos los parámetros
-    w = np.random.randn(X_train.shape[1]) * 0.0001
+    w = np.random.randn(X_train.shape[1]) * 0.0001 # de una distribución normal
     b = 0.0
 
     # Para visualizar convergencia
@@ -93,7 +97,7 @@ def gradient_ascent(X_train, y_train, X_test, y_test, alpha, num_it, w=None, b=N
     
         # Vamos imprimiendo el progreso
         if it % 100 == 0 or it == num_it - 1:
-            print(f"Iteración {it}: Train LogLoss={train_metrics['log_loss']:.4f} , Acc={train_metrics['acc']:.4f}| Test LogLoss={train_metrics['log_loss']:.4f}, Acc={test_metrics['acc']:.4f}")
+            print(f"Iteración {it}: Train LogLoss={train_metrics['log_loss']:.4f} , Acc={train_metrics['acc']:.4f}| Test LogLoss={test_metrics['log_loss']:.4f}, Acc={test_metrics['acc']:.4f}")
 
     metrics = {'train_log_loss_list':train_log_loss_list, 'train_acc_list':train_acc_list, 'test_log_loss_list':test_log_loss_list, 'test_acc_list':test_acc_list}
     return w, b, metrics
@@ -125,16 +129,6 @@ def plot_metrics(metrics_dict):
         plt.title('Error cuadrático medio')
         plot_idx += 1
     
-    if has_acc:
-        plt.subplot(1, num_plots, plot_idx)
-        plt.plot(metrics_dict['train_acc_list'], label='Train Accuracy')
-        plt.plot(metrics_dict['test_acc_list'], label='Test Accuracy')
-        plt.xlabel('Iteración')
-        plt.ylabel('Accuracy')
-        plt.legend()
-        plt.title('Accuracy')
-        plot_idx += 1
-    
     if has_log_loss:
         plt.subplot(1, num_plots, plot_idx)
         plt.plot(metrics_dict['train_log_loss_list'], label='Train Log Loss')
@@ -145,20 +139,25 @@ def plot_metrics(metrics_dict):
         plt.title('Log Loss')
         plot_idx += 1
 
+    if has_acc:
+        plt.subplot(1, num_plots, plot_idx)
+        plt.plot(metrics_dict['train_acc_list'], label='Train Accuracy')
+        plt.plot(metrics_dict['test_acc_list'], label='Test Accuracy')
+        plt.xlabel('Iteración')
+        plt.ylabel('Accuracy')
+        plt.legend()
+        plt.title('Accuracy')
+        plot_idx += 1
+
     plt.tight_layout()
     plt.show()
 
 def metricas(X, y, w, b):
-    preds = predict(X, w, b)
-    mse = np.mean((preds - y) ** 2)
-    acc = np.mean((preds > 0.5) == y)
+    preds_tanh = predict(X, w, b)
+    mse = np.mean((preds_tanh - y) ** 2)
+    acc = np.mean((preds_tanh > 0.5) == y)
+
+    preds_sig = predict_logverosimilitud(X, w, b)
     eps = 1e-8  # Para evitar log(0)
-    log_loss = -np.sum(y * np.log(preds + eps) + (1 - y) * np.log(1 - preds + eps))
+    log_loss = -np.mean(y * np.log(preds_sig + eps) + (1 - y) * np.log(1 - preds_sig + eps))
     return {'mse': mse, 'acc': acc, 'log_loss': log_loss}
-
-import numpy as np
-
-def log_loss(y_true, y_pred):
-    eps = 1e-8  # Para evitar log(0)
-    loss = -np.sum(y_true * np.log(y_pred + eps) + (1 - y_true) * np.log(1 - y_pred + eps))
-    return loss
