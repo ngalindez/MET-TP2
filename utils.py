@@ -34,7 +34,7 @@ def gradiente_logverosimilitud(X, y, w, b):
 
 def gradient_descent(X_train, y_train, X_test, y_test, alpha, num_it, w=None, b=None):
     # Inicializamos los parámetros
-    w = np.random.randn(X_train.shape[1]) * 0.0001 # de una distribución normal
+    w = np.zeros(X_train.shape[1])
     b = 0.0
 
     # Para visualizar convergencia
