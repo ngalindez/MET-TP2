@@ -1,3 +1,5 @@
+### Integrantes: Nicolás Galíndez, Nicolás Palazón y Patricio Jaime Peralta Ramos Guerrero
+
 import numpy as np
 import matplotlib.pyplot as plt
 from process_images import *
